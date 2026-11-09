@@ -39,7 +39,7 @@ def home():
     if not validate_user():
         return redirect(url_for("login"))
     user = profile.query.filter_by(id=session["user_id"]).first()
-    return f"Hello, {user.username}!"
+    return render_template("home.html", username=user.username)
 
 @app.route("/login", methods = ["GET", "POST"])
 def login():
@@ -60,6 +60,7 @@ def login():
             user = profile.query.filter_by(username=form.username.data).first()
             if user.password == hashlib.sha256(form.password.data.encode()).hexdigest():
                 session["user_id"] = user.id
+                flash(f"Welcome back, {user.username}!", "success")
                 return redirect(url_for("home"))
             else:
                 flash("Invalid username or password.", "danger")
@@ -87,6 +88,12 @@ def signup():
             flash("Account created successfully!", "success")
             return redirect(url_for("login"))
     return render_template("signup.html", form = form)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("You have been logged out.", "info")
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
     with app.app_context():
