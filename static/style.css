@@ -1,3 +1,8 @@
+body {
+    background-color: #6b8e23;
+    color: white;
+}
+
 .form_background {
     background-color: #6b8e23;
     color: white;
@@ -22,4 +27,8 @@ a:hover {
 
 .form_field input {
     width: 100%;
+}
+
+.alert {
+    margin: 0;
 }

@@ -80,6 +80,9 @@ def signup():
     if form.validate_on_submit():
         if profile.query.filter_by(username=form.username.data).first() is not None:
             flash("Username already exists. Please choose a different one.", "danger")
+        elif form.password.data != form.confirm_password.data:
+            flash("Passwords do not match. Please try again.", "danger")
+            print("Passwords do not match. Please try again.")
         else:
             # Create a new user profile
             new_user = profile(username=form.username.data, password=hashlib.sha256(form.password.data.encode()).hexdigest())
