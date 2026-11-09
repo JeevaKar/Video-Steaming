@@ -1,25 +1,29 @@
 {% extends "template.html" %}
 
 {% block content %}
-    <h1>Sign Up</h1>
-    <p>Please create an account to access the video streaming service.</p>
-    <form method="post" action="{{ url_for('signup') }}">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
-        </div>
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-        </div>
-        <div>
-            {{ form.confirm_password.label }}<br>
-            {{ form.confirm_password(size=32) }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-    <a href="{{ url_for('login') }}">Already have an account? Log in here.</a>
+<div class="min-vh-100 d-flex align-items-center justify-content-center form_background">
+    <div class="d-inline-block text-left border rounded p-3 mw-100 inner_form">
+        <h1>Sign Up</h1>
+        <p>Please create an account to access the video streaming service.</p>
+        <form method="post" action="{{ url_for('signup') }}">
+            {{ form.hidden_tag() }}
+            <div class="form_field">
+                {{ form.username.label }}<br>
+                {{ form.username(size=32) }}
+            </div>
+            <div class="form_field">
+                {{ form.password.label }}<br>
+                {{ form.password(size=32) }}
+            </div>
+            <div class="form_field">
+                {{ form.confirm_password.label }}<br>
+                {{ form.confirm_password(size=32) }}
+            </div>
+            <div class="form_field">
+                {{ form.submit() }}
+            </div>
+        </form>
+        <a href="{{ url_for('login') }}">Already have an account? Log in here.</a>
+    </div>
+</div>
 {% endblock %}

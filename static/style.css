@@ -1,0 +1,25 @@
+.form_background {
+    background-color: #6b8e23;
+    color: white;
+}
+
+a {
+    color: #c2c0a2;
+}
+
+a:hover {
+    color: #e9e1cc;
+}
+
+.inner_form {
+    width: min(90vw, 20vw);
+    background-color: #556b2f;
+}
+
+.form_field {
+    padding-bottom: 1rem;
+}
+
+.form_field input {
+    width: 100%;
+}
