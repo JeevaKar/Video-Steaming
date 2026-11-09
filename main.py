@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_session import Session
 from forms import loginForm, signupForm
 from flask_sqlalchemy import SQLAlchemy
+import hashlib
 
 app = Flask(__name__)
 
@@ -25,12 +26,17 @@ class profile(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
+def validate_user():
+    if "user_id" in session and profile.query.filter_by(id=session["user_id"]).first() is not None:
+        return True
+    return False
+
 @app.route("/")
 @app.route("/home")
 def home():
     """
     A simple Flask route that returns a greeting message."""
-    if "user_id" not in session:
+    if not validate_user():
         return redirect(url_for("login"))
     user = profile.query.filter_by(id=session["user_id"]).first()
     return f"Hello, {user.username}!"
@@ -42,19 +48,17 @@ def login():
     If the user is already logged in (i.e., "user_id" is in the session), they are redirected to the home page.
     Otherwise, a login form is displayed, and upon submission, the login logic is processed.
     """
-    if "user_id" in session:
+    if validate_user():
         return redirect(url_for("home"))
     
     form = loginForm()
     if form.validate_on_submit():
-        print(form.username.data)
-        print(form.password.data)
         if profile.query.filter_by(username=form.username.data).first() is None:
             flash("User does not exist. Please sign up first.", "danger")
         else:
             # Authenticate the user
             user = profile.query.filter_by(username=form.username.data).first()
-            if user.password == form.password.data:
+            if user.password == hashlib.sha256(form.password.data.encode()).hexdigest():
                 session["user_id"] = user.id
                 return redirect(url_for("home"))
             else:
@@ -68,7 +72,7 @@ def signup():
     If the user is already logged in (i.e., "user_id" is in the session), they are redirected to the home page.
     Otherwise, a signup form is displayed, and upon submission, the signup logic is processed.
     """
-    if "user_id" in session:
+    if validate_user():
         return redirect(url_for("home"))
 
     form = signupForm()
@@ -77,7 +81,7 @@ def signup():
             flash("Username already exists. Please choose a different one.", "danger")
         else:
             # Create a new user profile
-            new_user = profile(username=form.username.data, password=form.password.data)
+            new_user = profile(username=form.username.data, password=hashlib.sha256(form.password.data.encode()).hexdigest())
             db.session.add(new_user)
             db.session.commit()
             flash("Account created successfully!", "success")
