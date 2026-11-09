@@ -9,7 +9,21 @@ app.config["SECRET_KEY"] = "your_secret_key"
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 Session(app)
+
+db = SQLAlchemy(app)
+
+class profile(db.Model):
+    """
+    A SQLAlchemy model representing a user profile.
+    This model includes fields for the user's ID, username, and password.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
 
 @app.route("/")
 @app.route("/home")
@@ -32,9 +46,12 @@ def login():
     
     form = loginForm()
     if form.validate_on_submit():
-        # Process login logic here
+        print(form.username.data)
+        print(form.password.data)
         pass
     return render_template("login.html", form = form)
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
