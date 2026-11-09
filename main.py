@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_session import Session
 from forms import loginForm, signupForm
 from flask_sqlalchemy import SQLAlchemy
@@ -32,7 +32,8 @@ def home():
     A simple Flask route that returns a greeting message."""
     if "user_id" not in session:
         return redirect(url_for("login"))
-    return "Hello, world!"
+    user = profile.query.filter_by(id=session["user_id"]).first()
+    return f"Hello, {user.username}!"
 
 @app.route("/login", methods = ["GET", "POST"])
 def login():
@@ -48,8 +49,40 @@ def login():
     if form.validate_on_submit():
         print(form.username.data)
         print(form.password.data)
-        pass
+        if profile.query.filter_by(username=form.username.data).first() is None:
+            flash("User does not exist. Please sign up first.", "danger")
+        else:
+            # Authenticate the user
+            user = profile.query.filter_by(username=form.username.data).first()
+            if user.password == form.password.data:
+                session["user_id"] = user.id
+                return redirect(url_for("home"))
+            else:
+                flash("Invalid username or password.", "danger")
     return render_template("login.html", form = form)
+
+@app.route("/signup", methods = ["GET", "POST"])
+def signup():
+    """
+    A Flask route that handles user signup.
+    If the user is already logged in (i.e., "user_id" is in the session), they are redirected to the home page.
+    Otherwise, a signup form is displayed, and upon submission, the signup logic is processed.
+    """
+    if "user_id" in session:
+        return redirect(url_for("home"))
+
+    form = signupForm()
+    if form.validate_on_submit():
+        if profile.query.filter_by(username=form.username.data).first() is not None:
+            flash("Username already exists. Please choose a different one.", "danger")
+        else:
+            # Create a new user profile
+            new_user = profile(username=form.username.data, password=form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Account created successfully!", "success")
+            return redirect(url_for("login"))
+    return render_template("signup.html", form = form)
 
 if __name__ == "__main__":
     with app.app_context():
