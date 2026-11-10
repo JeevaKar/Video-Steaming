@@ -31,6 +31,25 @@ def validate_user():
         return True
     return False
 
+def get_videos():
+    """
+    Reads video data from a CSV file and returns a list of dictionaries containing video information.
+    Each dictionary contains the title, thumbnail, description, duration, and video file name.
+    """
+    import csv
+    videos = []
+    with open("static/video-data/videos.csv", newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile, skipinitialspace=True)
+        for row in reader:
+            videos.append({
+                "title": row["title"],
+                "thumbnail": row["thumbnail"],
+                "description": row["description"],
+                "duration": row["duration"],
+                "video_file": row["video_file"]
+            })
+    return videos
+
 @app.route("/")
 @app.route("/home")
 def home():
@@ -39,7 +58,7 @@ def home():
     if not validate_user():
         return redirect(url_for("login"))
     user = profile.query.filter_by(id=session["user_id"]).first()
-    return render_template("home.html", username=user.username)
+    return render_template("home.html", videos=get_videos())
 
 @app.route("/login", methods = ["GET", "POST"])
 def login():
