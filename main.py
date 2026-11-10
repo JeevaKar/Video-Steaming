@@ -60,6 +60,17 @@ def home():
     user = profile.query.filter_by(id=session["user_id"]).first()
     return render_template("home.html", videos=get_videos())
 
+@app.route("/video/<video_file>")
+def video(video_file):
+    """
+    A Flask route that serves video files.
+    If the user is not logged in, they are redirected to the login page.
+    Otherwise, the video page is rendered with the specified video file.
+    """
+    if not validate_user():
+        return redirect(url_for("login"))
+    return render_template("video.html", video_file=video_file)
+
 @app.route("/login", methods = ["GET", "POST"])
 def login():
     """

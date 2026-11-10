@@ -6,14 +6,16 @@
     </nav>
     <div class="video-grid">
         {% for video in videos %}
-            <div class="card">
-                <img src="{{ url_for('static', filename='video-data/thumbnails/' + video.thumbnail) }}" class="card-img" alt="{{ video.title }}">
-                <div class="card-img-overlay d-flex flex-column justify-content-end text-white video-card-overlay">
-                    <h5 class="card-title">{{ video.title }}</h5>
-                    <p class="card-text">{{ video.description }}</p>
-                    <p class="card-text"><small class="text-muted">Duration: {{ video.duration }}</small></p>
+            <a href="{{ url_for('video', video_file=video.video_file) }}" class="video-card-link">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='video-data/thumbnails/' + video.thumbnail) }}" class="card-img" alt="{{ video.title }}">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end text-white video-card-overlay">
+                        <h5 class="card-title">{{ video.title }}</h5>
+                        <p class="card-text">{{ video.description }}</p>
+                        <p class="card-text"><small class="text-muted">Duration: {{ video.duration }}</small></p>
+                    </div>
                 </div>
-            </div>
+            </a>
         {% endfor %}
     </div>
 {% endblock %}
