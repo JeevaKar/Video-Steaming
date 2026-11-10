@@ -6,10 +6,21 @@
             <a class="navbar-brand">Navbar</a>
         </nav>
         <div class="video-container">
-            <video controls>
+            <video class="video-player" playsinline preload="metadata">
                 <source src="{{ url_for('static', filename='video-data/videos/' + video_file) }}" type="video/webm">
                 Your browser does not support the video tag.
             </video>
+            <div class="video-controls" role="group" aria-label="Video controls">
+                <input class="video-progress" type="range" min="0" max="1000" value="0" aria-label="Seek video" disabled>
+                <div class="video-control-row">
+                    <button class="video-control-button" type="button" data-action="toggle-play" aria-label="Play video">Play</button>
+                    <span class="video-time"><span data-current-time>0:00</span> / <span data-duration>0:00</span></span>
+                    <button class="video-control-button" type="button" data-action="toggle-mute" aria-label="Mute video" aria-pressed="false">Mute</button>
+                    <input class="video-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                    <button class="video-control-button" type="button" data-action="toggle-fullscreen" aria-label="Enter fullscreen">Fullscreen</button>
+                </div>
+            </div>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='video-controls.js') }}" defer></script>
 {% endblock %}

@@ -63,6 +63,7 @@ a:hover {
 }
 
 .video-container {
+    position: relative;
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
@@ -75,6 +76,91 @@ a:hover {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+.video-controls {
+    position: absolute;
+    right: clamp(0.5rem, 3vw, 2rem);
+    bottom: clamp(0.5rem, 3vh, 2rem);
+    left: clamp(0.5rem, 3vw, 2rem);
+    z-index: 1;
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #fff;
+    background: rgba(14, 20, 19, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.video-control-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.video-control-button {
+    flex: 0 0 auto;
+    padding: 0.45rem 0.7rem;
+    color: inherit;
+    background: #24312d;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.video-control-button:hover {
+    background: #394b44;
+}
+
+.video-control-button:focus-visible,
+.video-controls input:focus-visible {
+    outline: 2px solid #f0a35e;
+    outline-offset: 2px;
+}
+
+.video-time {
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.video-progress,
+.video-volume {
+    accent-color: #e78035;
+    cursor: pointer;
+}
+
+.video-progress {
+    width: 100%;
+}
+
+.video-volume {
+    width: clamp(5rem, 12vw, 8rem);
+}
+
+.video-container:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+}
+
+@media (max-width: 520px) {
+    .video-controls {
+        right: 0.5rem;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        padding: 0.65rem;
+    }
+
+    .video-control-row {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .video-time {
+        margin-right: auto;
+    }
 }
 
 .navbar {
